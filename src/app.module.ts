@@ -1,8 +1,7 @@
-import { TestController } from './test/test.controller'
 import { Module } from '@nestjs/common'
+import { TaskModule } from './task/task.module'
 
 @Module({
-  imports: [],
-  controllers: [TestController],
+  imports: [TaskModule],
 })
 export class AppModule {}
