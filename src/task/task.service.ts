@@ -17,7 +17,7 @@ export class TaskService {
     return task
   }
 
-  createTask({ task, status, tags }: CreateTaskDto) {
+  createTask({ task, tags, status }: CreateTaskDto) {
     const newTask = new Task(task, tags, status)
     this.tasks.push(newTask)
     return newTask
