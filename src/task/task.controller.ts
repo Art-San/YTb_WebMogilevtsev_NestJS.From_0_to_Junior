@@ -16,12 +16,12 @@ export class TaskController {
   }
 
   @Post()
-  createTask(@Body('task') task: ITask): ITask {
+  createTask(@Body('task') task: string): ITask {
     return this.testService.createTask(task)
   }
 
-  @Delete(':id')
-  deleteTask(@Param('id') id: string) {
-    this.testService.remove(id)
-  }
+  // @Delete(':id')
+  // deleteTask(@Param('id') id: string) {
+  //   this.testService.remove(id) исправил
+  // }
 }
