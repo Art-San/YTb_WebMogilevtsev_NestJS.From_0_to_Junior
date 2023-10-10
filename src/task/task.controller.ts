@@ -6,6 +6,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   // UseFilters,
@@ -15,6 +16,7 @@ import {
 // import { AllExceptionsFilter } from '@sfc/exception-filter/exception.filter'
 import { CreateTaskDto } from './dto/create-task.dto'
 import { UpdateTaskDto } from './dto/update-task.dto'
+import { EmailPipe } from './pipes/email.pipe'
 import { ITask } from './task.interface'
 import { TaskService } from './task.service'
 
@@ -23,31 +25,37 @@ import { TaskService } from './task.service'
 // @UseFilters(new AllExceptionsFilter()) // лучше первый вариант
 @Controller('task')
 export class TaskController {
-  constructor(private testService: TaskService) {}
+  constructor(private taskService: TaskService) {}
   @Get()
   getTask(): ITask[] {
     // throw new HttpException('Какая-то ошибка', 400)
-    return this.testService.getTask()
+    return this.taskService.getTask()
   }
 
   @Get(':id')
-  getTaskById(@Param('id') id: string): ITask {
-    return this.testService.getTaskById(id)
+  getTaskById(@Param('id', ParseIntPipe) id: number): ITask {
+    return this.taskService.getTaskById(id)
   }
   @UsePipes(new ValidationPipe())
   @Post()
   createTask(@Body() dto: CreateTaskDto) {
-    return this.testService.createTask(dto)
+    return this.taskService.createTask(dto)
   }
 
   @UsePipes(new ValidationPipe())
   @Put(':id')
   updateTask(@Param('id') id: string, @Body() dto: UpdateTaskDto) {
-    return this.testService.updateTask(id, dto)
+    return this.taskService.updateTask(id, dto)
   }
 
   @Delete(':id')
   deleteTask(@Param('id') id: string) {
-    this.testService.remove(id)
+    this.taskService.remove(id)
+  }
+
+  // Кастомный EmailPipe проверяет на валидност email // РАБОТАЕТ Нашел функцию регулярное выражение
+  @Get('email/:email')
+  getTaskByEmail(@Param('email', EmailPipe) email: string): ITask[] {
+    return this.taskService.getTaskByEmail(email)
   }
 }

@@ -1,5 +1,6 @@
 import { NotFoundTaskException } from './exceptions/not-found-exception.exception'
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -15,21 +16,20 @@ export class TaskService {
   private tasks: ITask[] = []
 
   getTask(): ITask[] {
-    throw new Error('error')
     if (this.tasks.length === 0) {
-      // throw new NotFoundException({
-      //   message: 'Заданий нет в массиве',
-      //   error: 'Новая ошибка',
-      //   statusCode: 404,
-      // })
+      throw new NotFoundException({
+        message: 'Заданий нет в массиве',
+        error: 'Новая ошибка',
+        statusCode: 404,
+      })
       // throw new NotFoundException('Заданий нет')
       // throw new HttpException('Заданий нет', HttpStatus.NOT_FOUND) // Http Exception - HTTP-исключение принимает строку или объект с ответами
     }
     return this.tasks
   }
 
-  getTaskById(id: string): ITask {
-    const task = this.tasks.find((t) => t.id === +id)
+  getTaskById(id: number): ITask {
+    const task = this.tasks.find((t) => t.id === id)
     if (!task) {
       throw new NotFoundTaskException()
       // throw new NotFoundTaskException({ info: 'Доп информация' })
@@ -38,8 +38,8 @@ export class TaskService {
     return task
   }
 
-  createTask({ task, tags, status }: CreateTaskDto) {
-    const newTask = new Task(task, tags, status)
+  createTask({ task, email, tags, status }: CreateTaskDto) {
+    const newTask = new Task(task, email, tags, status)
     this.tasks.push(newTask)
     return newTask
   }
@@ -76,5 +76,13 @@ export class TaskService {
     const arr = this.tasks.filter((t) => t.id !== +id)
     this.tasks = arr
     throw new HttpException('Удалено', HttpStatus.CREATED)
+  }
+
+  getTaskByEmail(email: string): ITask[] {
+    const tasks = this.tasks.filter((t) => t.email === email)
+    if (!tasks || tasks?.length === 0) {
+      throw new BadRequestException('Tasks небыли найдены')
+    }
+    return tasks
   }
 }

@@ -10,6 +10,7 @@ export interface ITask {
   id: number
   task: string
   status: Status
+  email: string
   tags: string[]
   createdAt: Date
   updatedAt: Date

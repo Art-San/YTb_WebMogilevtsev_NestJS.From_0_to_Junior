@@ -1,5 +1,6 @@
 import {
   ArrayNotEmpty,
+  IsEmail,
   IsEnum,
   IsNotEmpty,
   IsNumber,
@@ -23,4 +24,8 @@ export class CreateTaskDto {
   @IsOptional()
   @IsEnum(Status, { message: 'Не верный тип статуса' })
   status?: Status
+
+  @IsOptional()
+  @IsEmail({}, { message: 'Некорректный email' })
+  email: string
 }
